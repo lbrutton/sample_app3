@@ -26,4 +26,20 @@ module SessionsHelper
 		cookies.delete(:remember_token) #delete the remeber token from the cookie (so how could anyone possibly access the site? above line is strange)
 		self.current_user = nil #sets current_user to nil, nothing more to say
 	end
+
+	def current_user?(user)
+		user == current_user
+	end
+
+	def redirect_back_or(default)
+		redirect_to(session[:return_to] || default)
+		session.delete(:return_to)
+	end
+
+	def store_location
+		session[:return_to] = request.url if request.get? #session facilty provided by rails, kind of like an instance of cookies that expires 
+		#automatically upon browser close. We're also using the request object to get the url of the requested page. 
+		#we check for get request to deal with certain edge cases, where the user might delete the cookies by hand before submitting a form
+		#we don't want to store the forwarding url in that case...
+	end
 end

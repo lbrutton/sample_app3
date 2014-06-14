@@ -13,6 +13,19 @@ describe User do
 	it { should respond_to(:password_confirmation)}
 	it { should respond_to(:authenticate)}
 	it { should respond_to(:remember_token)}
+	it { should respond_to(:admin)}
+
+	it { should be_valid }
+	it { should_not be_admin } #this line implies that the user should have an admin? boolean method - which rails will give it automatically, 
+	#because the attribute is already a boolean.
+
+	describe "with admin set to 'true'" do
+		before do
+			@user.save!
+			@user.toggle!(:admin) #flips the admin attribute from false to true
+		end
+		it { should be_admin}
+	end
 
 	describe "when name is not present" do
 		before { @user.name = "" }
