@@ -6,7 +6,7 @@
     <%= form_for(@user) do |f| %>
       <%= render 'shared/error_messages' %>
 
-      <%= f.label :name %>
+      <%= f.label :name %> <!--rails automatically fills the email and name fields -->
       <%= f.text_field :name %>
 
       <%= f.label :email %>
@@ -22,6 +22,7 @@
     <% end %>
 
     <%= gravatar_for @user %>
-    <a href="http://gravatar.com/emails">change</a>
+    <%= link_to "change", "http://gravatar.com/emails", target: '_blank' %> 
+    <!--<a href="http://gravatar.com/emails">change</a>-->
   </div>
 </div>
