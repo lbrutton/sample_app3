@@ -8,7 +8,7 @@ namespace :db do
                  admin: true)
     99.times do |n|
       name  = Faker::Name.name
-      email = "example-#{n+1}@railstutorial.org"
+      email = "example#{n+1}@motherfucker.org"
       password  = "password"
       User.create!(name: name, #create! is the same as create, but it raises an exception instead of just returing false for an invalid user
                    email: email,
