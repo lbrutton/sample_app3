@@ -13,7 +13,9 @@ describe User do
 	it { should respond_to(:password_confirmation)}
 	it { should respond_to(:authenticate)}
 	it { should respond_to(:remember_token)}
+	it { should respond_to(:microposts)}
 	it { should respond_to(:admin)}
+	it { should respond_to(:feed) }
 
 	it { should be_valid }
 	it { should_not be_admin } #this line implies that the user should have an admin? boolean method - which rails will give it automatically, 
@@ -108,5 +110,39 @@ describe User do
   describe "remember token" do
   	before { @user.save }
   	its(:remember_token){ should_not be_blank }
+  end
+
+  describe "micropost associations" do
+  	before { @user.save }
+  	let!(:older_micropost) do #let bang is to ensure that the variable exists from the moment it is defined, for the time stamps or something...
+  		FactoryGirl.create(:micropost, user:@user, created_at:1.day.ago)
+  	end
+  	let!(:new_micropost) do
+  		FactoryGirl.create(:micropost, user:@user, created_at:1.hour.ago)
+  	end
+  	it "should have the right microposts in the right order" do
+  		expect(@user.microposts.to_a).to eq [new_micropost, older_micropost] #to_a converts what is actually an Active Record "collection proxy" (argh)
+  		#to an array we can compare with the second part of the equation.
+  	end
+
+  	it "should destroy microposts with the user" do
+  		microposts = @user.microposts.to_a #we have to make it an array, or it would DEFINITELY be empty later on - not sure about this
+  		@user.destroy #remove @user from the db
+  		expect(microposts).not_to be_empty
+  		microposts.each do |micropost|
+  			expect(Micropost.where(id: micropost.id)).to be_empty #where is used here because it returns an empty object instead of raising 
+  			#and exception
+  		end
+  	end
+
+  	describe "status" do
+  		let(:unfollowed_post) do
+  			FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
+  		end
+
+  		its(:feed) { should include(new_micropost) }
+  		its(:feed) { should include(older_micropost) }
+  		its(:feed) { should_not include(unfollowed_post) }
+  	end
   end
 end

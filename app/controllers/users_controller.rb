@@ -10,6 +10,7 @@ class UsersController < ApplicationController
 
   def show
   	@user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def create
@@ -52,16 +53,6 @@ class UsersController < ApplicationController
   	params.require(:user).permit(:name, :email, :password, :password_confirmation) #notice that :admin is NOT present
   end
 
-  def signed_in_user
-    unless signed_in?
-    store_location
-    redirect_to signin_path, notice: "Please sign in" #signin_url also works
-    end
-    #uses a shortcut to set flash:[notice] by passing an options hash to the redirect_to function. 
-    #this is equivalent to: unless signed_in?
-    #flash[:notice] = "Please sign in."
-    #redirect_to signin_url
-  end
 
   def correct_user
     @user = User.find(params[:id])

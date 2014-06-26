@@ -8,4 +8,16 @@
 			</h1>
 		</section>
 	</aside>
+
+	<div class="span8" >
+		<% if @user.microposts.any? %>
+		<h3> Microposts (<%= @user.microposts.count %>) </h3>
+		<ol class="microposts">
+			<%= render @microposts %> <!--defers the heavy lifting to a @microposts partial; ie, automatically renders each micro in the @
+			microposts variable, using the _microposts.erb.html partial-->
+		</ol>
+		<%= will_paginate @microposts %> <!--we need to add @microposts here, because will_paginate is by default associated to @users, not to 
+		@microposts -->
+		<% end %>
+	</div>
 </div>

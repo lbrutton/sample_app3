@@ -1,0 +1,9 @@
+<% if @feed_items.any? %>
+	<ol class="microposts">
+		<%= render partial:'shared/feed_item', collection:@feed_items %> <!-- collecntion specifies that render should use the given partial
+		to render each item in the collection. It is because of this parameter that we also need the word 'partial:', which
+		we didn't need in other rederings of partials-->
+	</ol>
+	<%= will_paginate @feed_items %>
+	<% end %>
+

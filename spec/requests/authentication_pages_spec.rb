@@ -69,6 +69,19 @@ describe "AuthenticationPages" do
 				specify {expect(response).to redirect_to(signin_path) } #when using a direct request, we get access to the 'low-level' response object
 				#in this case verifying that the server responds by redirecting to signin_path
 			end
+
+			describe "in the microposts controller" do
+
+				describe "submitting to the create action" do
+					before {post microposts_path}
+					specify{expect(response).to redirect_to(signin_path)}
+				end
+
+				describe "submitting to the delete action" do
+					before {delete micropost_path(FactoryGirl.create(:micropost))}
+					specify{expect(response).to redirect_to signin_path}
+				end
+			end
 		end
 
 		describe "as non-admin user" do

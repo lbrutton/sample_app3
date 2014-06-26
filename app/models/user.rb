@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+    has_many :microposts, {:dependent => :destroy} #has_many here takes a symbol, plus a hash where :dependent is the key and :destroy is the value of that
+    #key
 	has_secure_password
 	before_save { email.downcase! }
 	before_create :create_remember_token
@@ -10,6 +12,10 @@ class User < ActiveRecord::Base
 
     def User.new_remember_token #these two methods are private because we need to access them outside of this model
     	SecureRandom.urlsafe_base64
+    end
+
+    def feed
+        Micropost.where("user_id = ?", id)
     end
 
     def User.digest(token)

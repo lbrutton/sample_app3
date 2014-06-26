@@ -31,6 +31,18 @@ module SessionsHelper
 		user == current_user
 	end
 
+	def signed_in_user
+    unless signed_in?
+    store_location
+    redirect_to signin_path, notice: "Please sign in" #signin_url also works
+    end
+    #uses a shortcut to set flash:[notice] by passing an options hash to the redirect_to function. 
+    #this is equivalent to: unless signed_in?
+    #flash[:notice] = "Please sign in."
+    #redirect_to signin_url
+    #note: this was moved out of private methods in the users controller, so it would be available in the microposts controller, go figure
+  	end
+
 	def redirect_back_or(default)
 		redirect_to(session[:return_to] || default)
 		session.delete(:return_to)
